@@ -1,6 +1,7 @@
 package bullscows;
 
 import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
     public static Scanner sc = new Scanner(System.in);
@@ -8,7 +9,6 @@ public class Main {
     static int cow = 0;
 
     public static void main(String[] args) {
-        String result = "";
         System.out.println("Please, enter the secret code's length:");
         int codeLength = sc.nextInt();
 
@@ -16,28 +16,17 @@ public class Main {
             System.out.println("Error: can't generate a secret number with a length of 11 because there aren't enough unique digits.");
             return;
         }
+        Random random = new Random();
+        StringBuilder result = new StringBuilder();
         while(result.length() != codeLength) {
-            // get nanosecond
-            long pseudoRandomNumber = System.nanoTime();
-
-            // reverse nanosecond and remove leading zeros
-            String tempNumber = String.valueOf(Long.parseLong(new StringBuilder(String.valueOf(pseudoRandomNumber))
-                    .reverse()
-                    .toString()));
-
-            // get unique numbers and form the result
-            for (int i = 0; i < tempNumber.length(); i++) {
-
-                if (!result.contains(String.valueOf(tempNumber.charAt(i)))) {
-                    result += String.valueOf(tempNumber.charAt(i));
-                }
-                if (result.length() == codeLength) {
-                    break;
-                }
+            int randomInt = random.nextInt(10);
+            if (result.length() == 0 || !result.toString().contains((String.valueOf(randomInt)))) {
+                result.append(randomInt);
             }
         }
-        System.out.println(result);
-        String[] secretCode = result.split("");
+        String res = result.toString(); 
+        System.out.println(res);
+        String[] secretCode = res.split("");
         int counter = 1;
         String answer;
         System.out.println("Okay, let's start a game!");
@@ -45,14 +34,13 @@ public class Main {
             System.out.printf("Turn %d:%n", counter);
             answer = sc.next();
             grader(secretCode, answer);
-            if (answer.equals(result)) {
+            if (answer.equals(res)) {
                 System.out.println("Congratulations! You guessed the secret code.");
                 break;
             }
-            grader(secretCode, answer);
 
             counter++;
-        } while (result != answer);
+        } while (res != answer);
     }
 
     public static void grader(String[] code, String answer) {
