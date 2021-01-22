@@ -17,7 +17,7 @@ public class Game {
 
     public void start () {
         int codeLength = getLength();
-        int symbols = getSymbols();
+        int symbols = getSymbols(codeLength);
         messageInitiate(codeLength, symbols);
         String secretCode = codeGenerator(codeLength, symbols);
         System.out.println("Okay, let's start a game!");
@@ -40,19 +40,52 @@ public class Game {
     }
 
     private int getLength() {
+        int length = 0;
         System.out.println("Input the length of the secret code: ");
-        int length = Integer.valueOf(sc.nextLine());
+        String lengthInput = sc.nextLine();
+
+        try {
+            length = Integer.parseInt(lengthInput);
+        } catch (NumberFormatException e){
+            System.out.println("Error: Incorrect number format");
+            System.exit(0);
+        }
+        
+        if (length < 1) {
+            System.out.println("Error: 0 isn't a valid number");
+            System.exit(0);
+        }
         if (length > 36) {
-            System.out.println("Error: can't generate a secret number with a length greater than 36 because there aren't enough unique alphabets and digits.");  
-            getLength();
+            System.out.println("Error: maximum сode length is 36 characters");
+            System.exit(0);
         }
         return length;
     }
 
-    private int getSymbols() {
+    private int getSymbols(int length) {
+        int charsCount = 0;
         System.out.println("Input the number of possible symbols in the code:");
-        int possibleSymbols = Integer.valueOf(sc.nextLine());
-        return possibleSymbols;
+        String charsInput = sc.nextLine();
+
+        
+        try {
+            charsCount = Integer.parseInt(charsInput);
+        } catch (NumberFormatException e){
+            System.out.println("Error: Incorrect number format");
+            System.exit(0);
+        }
+        
+        if (charsCount < length) {
+            System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.\n", length, charsCount);
+            System.exit(0);
+        }
+        
+        if (charsCount > 36) {
+            System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+            System.exit(0);
+        }
+        return charsCount;
+
     }
 
     public void messageInitiate(int len, int sym) {
@@ -115,3 +148,5 @@ public class Game {
 
     }
 }
+
+
